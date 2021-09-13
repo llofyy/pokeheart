@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./components/Head', { title: 'PokéHeart | Profile' }) %>
+<body>
+  <%- include('./components/Navbar', { genre: trainer.genre, name: trainer.name, pokedex: pokedex.length }) %>
+  <div class="container p-3">
+    <h1>Sua Pokédex</h1>
+    <hr>
+    <div class="d-flex flex-wrap justify-content-center">
+      <% if(pokedex.length < 1){ %>
+        <p>Sua pokédex está vazia.</p>
+      <% }else{ %>
+      <% pokedex.forEach(pokemon => { %>
+        <div class="card text-center m-2" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title"><%= pokemon.name.toUpperCase() %></h5>
+            <img src="<%= pokemon.imageUrl %>" class="img-thumbnail" width="150" alt="Profile Avatar">
+            <p class="d-flex align-items-center justify-content-center m-1"><ion-icon name="flash-outline"></ion-icon> <%= pokemon.cp %></p>
+            <hr>
+            <div class="container">
+                <% pokemon.attribute.split(',').forEach(attr => { %>
+                  <% if(attr === "fire" || attr === "fairy"){ %>
+                    <span class="badge rounded-pill bg-danger"><%= attr.toUpperCase() %></span>
+                  <% }else if(attr === "grass" || attr === "bug"){ %>
+                    <span class="badge rounded-pill bg-success"><%= attr.toUpperCase() %></span>
+                  <% }else if(attr === "poison" || attr === "psychic" || attr === "dark" || attr === "ghost") { %>
+                    <span class="badge rounded-pill bg-dark"><%= attr.toUpperCase() %></span>
+                  <% }else if(attr === "water" || attr === "flying"){ %>
+                    <span class="badge rounded-pill bg-info"><%= attr.toUpperCase() %></span>
+                  <% }else if(attr === "electric"){%>
+                    <span class="badge rounded-pill bg-warning"><%= attr.toUpperCase() %></span>
+                  <%}else if(attr === "rock" || attr === "ground"){ %>
+                    <span class="badge rounded-pill bg-secondary"><%= attr.toUpperCase() %></span>
+                  <% }else {%>
+                    <span class="badge rounded-pill bg-primary"><%= attr.toUpperCase() %></span>
+                  <% } %>
+                <% }) %>
+            </div>
+          </div>
+        </div>
+      <% })} %>
+    </div>
+  </div>
+  <%- include('./components/Scripts') %>
+</body>
+</html>
