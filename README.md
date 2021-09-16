@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # PokeHeart
 Plataforma para treinadores Pokémons.
 
@@ -12,3 +13,7 @@ Plataforma para treinadores Pokémons.
 - [x] Cadastro de pokemons no banco de dados
 - [x] Adicionar pokemons a pokedex de treinadores
 - [x] Sistema para captura de pokemons com números de capturas limitadas
+=======
+# pokeheart
+Plataforma para treinadores Pokémons. ( Em desenvolvimento)
+>>>>>>> 4cd301dda81699b13e0d7f80c5ceec9ea80068de
