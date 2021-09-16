@@ -1,6 +1,6 @@
 # PokeHeart
 
-Plataforma para treinadores Pokémons.
+Plataforma para treinadores Pokémons (Em desenvolvimento).
 
 # TO-DO
 - [] Lutas no campo de batalha
