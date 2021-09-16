@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./components/Head', { title: 'PokeHeart | Register' }) %>
+<body>
+
+  <div class="container p-5">
+    <div class="card">
+      <div class="card-header">
+        <h1>Cadastre-se</h1>
+      </div>
+      <div class="card-body">
+        <div style="display: none; justify-content: center;" class="alert alert-danger" role="alert"></div>
+        <form class="flex p-5" id="register-form">
+          <div class="form-group">
+            <input type="text" class="form-control" name="name" placeholder="nome">
+          </div>
+          <div class="form-group mt-3">
+            <input type="text" class="form-control" name="username" placeholder="usuário">
+          </div>
+          <div class="form-group mt-3">
+            <input type="password" class="form-control" name="password" placeholder="senha">
+          </div>
+          <div class="form-group mt-3">
+            <input type="number" class="form-control" name="age" placeholder="idade">
+          </div>
+          <div class="form-group mt-3">
+            <label for="genre" class="mb-1">Você é:</label>
+            <select class="form-select" aria-label="Default select example" name="genre">
+              <option value="male">Menino</option>
+              <option value="female">Menina</option>
+            </select>
+          </div>
+          <div class="form-group mt-3">
+            <label for="genre" class="mb-1">Escolha sua região:</label>
+            <select class="form-select" aria-label="Default select example" name="region">
+              <option value="Kanto">Kanto</option>
+              <option value="Johto">Johto</option>
+              <option value="Hoenn">Hoenn</option>
+              <option value="Sinnoh">Sinnoh</option>
+            </select>
+          </div>
+          <div class="form-group mt-3">
+            <button class="btn btn-primary">Cadastrar</button>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <a href="/" class="btn btn-link">Entre com sua conta</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="position-fixed top-0 end-0 p-3 text-light" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong id="toast-title" class="me-auto"></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    const registerForm = document.querySelector('#register-form');
+    const notification = document.getElementById('liveToast');
+    const notificationTitle = document.querySelector('#toast-title');
+    const notificationMessage = document.querySelector('#message');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+
+      const name = formData.get('name');
+      const username = formData.get('username');
+      const password = formData.get('password');
+      const age = formData.get('age');
+      const genre = formData.get('genre');
+      const region = formData.get('region');
+
+      await fetch('/register', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          age,
+          genre,
+          region,
+          name
+        })
+      }).then(response => {
+        if(response.ok){
+          notification.classList.remove('bg-danger')
+          notification.classList.add('bg-success')
+          notificationTitle.innerHTML = "Sucesso";
+          notificationMessage.innerHTML = `Usuário ${username} cadastrado.`
+          const toast = new bootstrap.Toast(notification)
+          toast.show()
+        }else{
+          notification.classList.remove('bg-success')
+          notification.classList.add('bg-danger')
+          notificationTitle.innerHTML = "Erro";
+          notificationMessage.innerHTML = `Algo de errado aconteceu.`
+          const toast = new bootstrap.Toast(notification)
+          toast.show()
+        }
+      })
+    })
+  </script>
+
+<%- include('./components/Scripts') %>
+</body>
+</html>

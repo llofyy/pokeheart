@@ -4,43 +4,137 @@
 <body>
   <%- include('./components/Navbar', { genre: trainer.genre, name: trainer.name, pokedex: pokedex.length }) %>
   <div class="container p-3">
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+      <div id="liveToast" class="toast text-white bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong id="message-title" class="me-auto"></strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          <p id="capturado-message"></p>
+        </div>
+      </div>
+    </div>
+    <script>
+      const toastLiveExample = document.querySelector('#liveToast')
+      const messageTitle = document.querySelector('#message-title')
+      const message = document.querySelector('#capturado-message');
+    </script>
     <h1>Sua Pokédex</h1>
     <hr>
-    <div class="d-flex flex-wrap justify-content-center">
+    <div class="d-flex flex-wrap justify-content-center" id="pokedex-list">
       <% if(pokedex.length < 1){ %>
         <p>Sua pokédex está vazia.</p>
       <% }else{ %>
-      <% pokedex.forEach(pokemon => { %>
-        <div class="card text-center m-2" style="width: 18rem;">
+      <% pokedex.forEach((pokemon, index) => { %>
+        <div class="card text-center m-2" id="pokemon-pokedex-<%= index %>" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title"><%= pokemon.name.toUpperCase() %></h5>
             <img src="<%= pokemon.imageUrl %>" class="img-thumbnail" width="150" alt="Profile Avatar">
-            <p class="d-flex align-items-center justify-content-center m-1"><ion-icon name="flash-outline"></ion-icon> <%= pokemon.cp %></p>
+            <p class="d-flex align-items-center justify-content-center m-1"><ion-icon name="flash-outline"></ion-icon> <%= pokemon.cp.toLocaleString() %></p>
+            <div class="d-flex align-items-center justify-content-between">
+              <button type="button" class="btn btn-danger d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#pokemon-modal-<%= index %>"><ion-icon name="extension-puzzle-outline" style="font-size: 20px;"></ion-icon></button>
+              <a href="/laboratory/<%= pokemon.name %>" class="btn btn-dark d-flex align-items-center justify-content-center"><ion-icon name="flask-outline" style="font-size: 20px;"></ion-icon></a>
+            </div>
             <hr>
-            <div class="container">
-                <% pokemon.attribute.split(',').forEach(attr => { %>
+            <div class="container pokemon-type-<%= index %>">
+                <% pokemon.attribute.split(',').forEach((attr) => { %>
                   <% if(attr === "fire" || attr === "fairy"){ %>
-                    <span class="badge rounded-pill bg-danger"><%= attr.toUpperCase() %></span>
+                    <span class="badge rounded-pill bg-danger fragment"><%= attr.toUpperCase() %></span>
                   <% }else if(attr === "grass" || attr === "bug"){ %>
-                    <span class="badge rounded-pill bg-success"><%= attr.toUpperCase() %></span>
+                    <span class="badge rounded-pill bg-success fragment"><%= attr.toUpperCase() %></span>
                   <% }else if(attr === "poison" || attr === "psychic" || attr === "dark" || attr === "ghost") { %>
-                    <span class="badge rounded-pill bg-dark"><%= attr.toUpperCase() %></span>
-                  <% }else if(attr === "water" || attr === "flying"){ %>
-                    <span class="badge rounded-pill bg-info"><%= attr.toUpperCase() %></span>
+                    <span class="badge rounded-pill bg-dark fragment"><%= attr.toUpperCase() %></span>
+                  <% }else if(attr === "water" || attr === "flying" || attr === "ice"){ %>
+                    <span class="badge rounded-pill bg-info fragment"><%= attr.toUpperCase() %></span>
                   <% }else if(attr === "electric"){%>
-                    <span class="badge rounded-pill bg-warning"><%= attr.toUpperCase() %></span>
-                  <%}else if(attr === "rock" || attr === "ground"){ %>
-                    <span class="badge rounded-pill bg-secondary"><%= attr.toUpperCase() %></span>
+                    <span class="badge rounded-pill bg-warning fragment"><%= attr.toUpperCase() %></span>
+                  <%}else if(attr === "rock" || attr === "ground" || attr === "fighting"){ %>
+                    <span class="badge rounded-pill bg-secondary fragment"><%= attr.toUpperCase() %></span>
                   <% }else {%>
-                    <span class="badge rounded-pill bg-primary"><%= attr.toUpperCase() %></span>
+                    <span class="badge rounded-pill bg-primary fragment"><%= attr.toUpperCase() %></span>
                   <% } %>
                 <% }) %>
+            </div>
+          </div>
+          <div class="modal fade" id="pokemon-modal-<%= index %>" tabindex="-1" aria-labelledby="pokemon-modal-<%= index %>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Fragmento de <%= pokemon.name.toUpperCase() %></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="fragment-form-<%= index %>">
+                <div class="modal-body">
+                  <div class="container d-flex align-items-center flex-column">
+                    <img src="<%= pokemon.imageUrl %>" class="img-fluid" width="150" alt="Pokemon Image">
+                    <p class="mt-3">Selecione abaixo o fragmento que deseja obter:</p>
+                    <select name="fragment"  class="form-select" id="fragment-list">
+                      <% pokemon.attribute.split(',').forEach((attr) => { %>
+                        <option value="<%= attr %>"><%= attr.toUpperCase() %></option>
+                      <% }) %>
+                    </select>
+                    <p class="lead text-danger mt-3" style="font-size: 14px;">Ao aceitar, esse pokémon será removido da sua pokédex.</p>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Aceitar</button>
+                </div>
+
+                <script>
+                  document.querySelector('#fragment-form-<%= index %>').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const toast = new bootstrap.Toast(toastLiveExample)
+
+                    const formData = new FormData(e.target);
+
+                    const trainer = '<%= trainer.id %>'
+                    const pokemon = '<%= pokemon.name %>'
+                    const fragment = formData.get('fragment')
+
+                    await fetch('/fragment', {
+                      method: 'post',
+                      headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        trainerId: trainer,
+                        pokemon,
+                        fragment,
+                        cp: Number('<%= pokemon.cp %>'),
+                        pokemonId: Number('<%= pokemon.id %>')
+                      })
+                    }).then(response => {
+                      if(response.ok) {
+                        toastLiveExample.classList.remove('bg-danger')
+                        toastLiveExample.classList.add('bg-success')
+                        const pokedexList = document.querySelector('#pokedex-list')
+                        const pokemonPokedex = document.querySelector('#pokemon-pokedex-<%= index %>');
+                        pokedexList.removeChild(pokemonPokedex);
+                        messageTitle.innerHTML = 'Sucesso!'
+                        message.innerHTML = `Fragmento de ${fragment.toUpperCase()} adicionado ao laboratório`
+                        toast.show()
+                      }else {
+                        toastLiveExample.classList.remove('bg-success')
+                        toastLiveExample.classList.add('bg-danger')
+                        messageTitle.innerHTML = 'Erro'
+                        message.innerHTML = `Algo não funcionou corretamente.`
+                        toast.show()
+                      }
+                    })
+                  });
+                </script>
+              </form>
+              </div>
             </div>
           </div>
         </div>
       <% })} %>
     </div>
   </div>
+
   <%- include('./components/Scripts') %>
 </body>
 </html>
