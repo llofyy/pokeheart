@@ -3,9 +3,9 @@
 Plataforma para treinadores Pokémons (Em desenvolvimento).
 
 # TO-DO
-- [] Lutas no campo de batalha
-- [] Ganhar capturas no Campo de Batalha
-- [] Lutas pvp na Arena
+- [ ] Lutas no campo de batalha
+- [ ] Ganhar capturas no Campo de Batalha
+- [ ] Lutas pvp na Arena
 # DONE
 - [x] Fortalecer pokemons no laboratório utilizando fragmentos
 - [x] Sistema de autenticação com jwt
