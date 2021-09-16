@@ -1,2 +1,2 @@
 # pokeheart
-Plataforma para treinadores Pokémons.
+Plataforma para treinadores Pokémons. ( Em desenvolvimento)
