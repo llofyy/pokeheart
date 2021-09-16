@@ -16,6 +16,6 @@ app.use(cookieParser());
 app.use(routes);
 app.use(errorMiddleware);
 
-app.listen(3000, () => {
+app.listen(3333, () => {
   console.log('App is running... 🚀');
 });

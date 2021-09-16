@@ -14,7 +14,7 @@ export default class ProfileController {
       .then(async (pk) => {
         const pouk = [];
         if (pk.id.length < 1) {
-          res.render('profile', {
+          res.json({
             trainer: trainerData,
             pokedex: pouk,
           });
@@ -27,7 +27,7 @@ export default class ProfileController {
             };
             pouk.push(poke);
             if (pouk.length === pk.id.length) {
-              res.render('profile', {
+              res.json({
                 trainer: trainerData,
                 pokedex: pouk,
               });

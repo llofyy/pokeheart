@@ -10,6 +10,9 @@ export default class TrainerService {
       delete trainer.password;
       return trainer;
     });
-    return trainersNoPassword;
+    return {
+      total: trainersNoPassword.length,
+      trainers: trainersNoPassword,
+    };
   }
 }

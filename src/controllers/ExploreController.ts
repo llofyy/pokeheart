@@ -22,7 +22,7 @@ export default class ExploreController {
         if (pokeList.length === chanceToCapture.length) {
           const getTrainerService = new GetTrainerService();
           const trainerData = await getTrainerService.execute(trainer.id);
-          res.render('explore', {
+          res.json({
             trainer: trainerData,
             pokemons: pokeList,
           });

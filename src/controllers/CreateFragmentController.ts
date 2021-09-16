@@ -15,10 +15,9 @@ export default class CreateFragmentController {
       .then(async (response) => {
         const existType = response.data.types.filter((tp) => tp.type.name === fragment);
         if (existType.length > 0) {
-          await createFragmentService.execute(trainerId, fragment);
-          await deletePokemonService.execute({ trainerId, pokemonId, cp });
-          res.json({
-            success: 'fragment adicionado com sucesso!',
+          await createFragmentService.execute(trainerId, fragment).then(async (fr) => {
+            await deletePokemonService.execute({ trainerId, pokemonId, cp });
+            res.json(fr);
           });
         } else {
           throw new Error('Erro ao adicionar fragmento');

@@ -21,5 +21,10 @@ export default class StrengthenPokemonService {
     }, {
       cp: pokemon.cp + cp,
     });
+
+    return {
+      ...pokemon,
+      cp: pokemon.cp + cp,
+    };
   }
 }

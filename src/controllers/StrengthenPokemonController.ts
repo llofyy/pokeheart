@@ -6,7 +6,7 @@ import StrengthenPokemonService from '../services/Pokemon/StrengthenPokemonServi
 export default class StrengthenPokemonController {
   public async handle(req: Request, res: Response) {
     const {
-      trainerId, fragment, pokemonId, cp,
+      trainer, fragment, pokemonId, cp,
       pokemonCp,
     } = req.body;
 
@@ -14,12 +14,10 @@ export default class StrengthenPokemonController {
     const removeFragmentService = new RemoveFragmentService();
     const strengthenPokemonService = new StrengthenPokemonService();
 
-    await removeFragmentService.execute(trainerId, fragment);
-    await deletePokemonService.execute({ trainerId, pokemonId, cp });
-    await strengthenPokemonService.execute(trainerId, pokemonId, cp, pokemonCp);
+    await removeFragmentService.execute(trainer.id, fragment);
+    await deletePokemonService.execute({ trainerId: trainer.id, pokemonId, cp });
+    const pokemon = await strengthenPokemonService.execute(trainer.id, pokemonId, cp, pokemonCp);
 
-    res.json({
-      message: 'sucesso',
-    });
+    res.json(pokemon);
   }
 }

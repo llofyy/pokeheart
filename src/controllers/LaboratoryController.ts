@@ -8,7 +8,6 @@ export default class LaboratoryController {
   public async handle(req: Request, res: Response) {
     const { trainer } = req.body;
     const { pokemonName } = req.params;
-    const { success } = req.query;
     const getTrainerService = new GetTrainerService();
     const getPokedexService = new GetPokedexService();
     const getPokemonService = new GetPokemonService();
@@ -28,14 +27,11 @@ export default class LaboratoryController {
           };
           pouk.push(poke);
           const existInPokedex = pouk.filter((p) => p.name === pokemonName);
-          if (!existInPokedex) {
-            res.redirect('/profile');
-          } else if (pouk.length === pk.id.length) {
-            res.render('laboratory', {
+          if (pouk.length === pk.id.length) {
+            res.json({
               trainer: trainerData,
               pokedex: existInPokedex,
               fragments,
-              success: !!success,
             });
           }
         });
